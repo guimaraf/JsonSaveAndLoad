@@ -1,0 +1,12 @@
+.git/
+.vs/
+Library/
+Logs/
+obj/
+Packages/
+UserSettings/
+
+
+.vsconfig
+Assembly-CSharp.csproj
+JsonSaveAndLoad.sln

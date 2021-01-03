@@ -8,9 +8,24 @@ public class PlayerController : MonoBehaviour
     public Player player;
     void Start()
     {
+        // criando o objeto do pplayer
         player = new Player();
-        player.DirectoryName();
+
+        // verificando se existe a pasta e o arquivo
+        // após encontrar o arquivo, ele será carregado no script
+        // o próprio método que verifica se existe, já cria a pasta e arquivos necessários
+        if (player.DirectoryExists())
+        {
+            print("Arquivo carregado");
+            player.Load();
+        }
+        
+        else
+        {
+            print("Arquivo não encontrado, criando diretório e arquivo de configuração");
+        }
     }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.S))
@@ -35,7 +50,7 @@ public class Player
     [SerializeField] private int power = 0;
     [SerializeField] private float life = 0;
 
-    public List<int> weapons = new List<int>();
+    public List<string> weapons = new List<string>(2);
     
     public void Save()
     {
@@ -57,12 +72,25 @@ public class Player
     {
         return path;
     }
-    public void DirectoryName()
+
+    public bool DirectoryExists()
     {
-        if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/JsonSaveAndLoad"))
+        bool existFile = false;
+        
+        // aqui é onde a mágica acontece, verifico se existe a pasta, se não existir, será criado a pasta e também o arquivo de configuração, chamando o
+        // método Save()
+        // se o arquivo já existir, vai apenas retornar verdadeiro e feito o load das informações
+
+        if(!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/JsonSaveAndLoad"))
         {
             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/JsonSaveAndLoad");
+            path = string.Format(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/JsonSaveAndLoad/config.json");
+            Save();
         }
-        path = string.Format(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/JsonSaveAndLoad/config.json");
+        else
+        {
+            existFile = true;
+        }
+        return existFile;
     }
 }
